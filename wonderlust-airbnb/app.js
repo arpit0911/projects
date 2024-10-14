@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
 
 //  * use declaration
 const app = express();
@@ -24,10 +25,12 @@ app.set("view engine", "ejs"); // to specify the view engine
 app.set("views", path.join(__dirname, "views")); // to link the views
 app.use(express.urlencoded({ extended: true })); // used so that we can read the data from params
 app.use(methodOverride("_method")); // html form only have post and get methods methodOverride used for put, delete etc methods
+app.engine("ejs", ejsMate);
+app.use(express.static(path.join(__dirname, "/public")));
 
 // * root Routes
 app.get("/", (req, res) => {
-  res.send("Working fine");
+  res.send("Iam Home Route");
 });
 
 // * index route

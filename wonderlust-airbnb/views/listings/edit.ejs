@@ -1,40 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wanderlust</title>
-  </head>
-  <body>
-    <h3>Edit the listing <%= listing.title %></h3>
-    <form action="/listings/<%= listing._id %>?_method=put" method="post">
-      <input value="<%= listing.title %>" type="text" name="listing[title]" />
-      <br /><br />
-      <textarea name="listing[description]">
-<%= listing.description %></textarea
-      >
-      <br /><br />
-      <input
-        value="<%= listing.image %> url/link"
-        type="text"
-        name="listing[image]"
-      />
-      <br /><br />
-      <input value="<%= listing.price %>" type="number" name="listing[price]" />
-      <br /><br />
-      <input
-        value="<%= listing.country %>"
-        type="text"
-        name="listing[country]"
-      />
-      <br /><br />
-      <input
-        value="<%= listing.location %>"
-        type="text"
-        name="listing[location]"
-      />
-      <br /><br />
-      <button>Edit</button>
-    </form>
-  </body>
-</html>
+<% layout("/layouts/boilerplate.ejs") %>
+
+<body>
+  <h3>Edit the listing <%= listing.title %></h3>
+  <form action="/listings/<%= listing._id %>?_method=put" method="post">
+    <input value="<%= listing.title %>" type="text" name="listing[title]" />
+    <br /><br />
+    <textarea name="listing[description]"><%= listing.description %></textarea>
+    <br /><br />
+    <input
+      value="<%= listing.image %> url/link"
+      type="text"
+      name="listing[image]"
+    />
+    <br /><br />
+    <input value="<%= listing.price %>" type="number" name="listing[price]" />
+    <br /><br />
+    <input value="<%= listing.country %>" type="text" name="listing[country]" />
+    <br /><br />
+    <input
+      value="<%= listing.location %>"
+      type="text"
+      name="listing[location]"
+    />
+    <br /><br />
+    <button>Edit</button>
+  </form>
+</body>
