@@ -20,28 +20,15 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
+app.set("view engine", "ejs"); // to specify the view engine
+app.set("views", path.join(__dirname, "views")); // to link the views
+app.use(express.urlencoded({ extended: true })); // used so that we can read the data from params
+app.use(methodOverride("_method")); // html form only have post and get methods methodOverride used for put, delete etc methods
 
-// * Routes
+// * root Routes
 app.get("/", (req, res) => {
   res.send("Working fine");
 });
-
-// app.get("/testListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "Singh villa",
-//     description: "Pradhan House",
-//     price: 1200,
-//     location: "Bahalolpur, Azamgarh",
-//     country: "India",
-//   });
-//   await sampleListing.save();
-//   console.log("sample saves successful");
-//   res.send("Successful");
-// });
 
 // * index route
 app.get("/listings", async (req, res) => {
@@ -71,19 +58,28 @@ app.post("/listings", async (req, res) => {
   res.redirect("/listings");
 });
 
-// * edit route
+// * show edit route
 app.get("/listings/:id/edit", async (req, res) => {
   const { id } = req.params;
   const foundListing = await Listing.findById(id);
   res.render("listings/edit.ejs", { listing: foundListing });
 });
 
+// * Update route
 app.put("/listings/:id", async (req, res) => {
   const { listing } = req.body;
   const { id } = req.params;
-  console.log(listing);
+  // console.log(listing);
   await Listing.findByIdAndUpdate(id, listing);
   res.redirect(`/listings/${id}`);
+});
+
+// * delete route
+app.delete("/listings/:id", async (req, res) => {
+  const { id } = req.params;
+  const deletedListing = await Listing.findByIdAndDelete(id);
+  // console.log(deletedListing);
+  res.redirect("/listings");
 });
 
 // * Express server connection
