@@ -57,16 +57,17 @@ app.get("/listings/new", (req, res) => {
 app.get("/listings/:id", async (req, res) => {
   const { id } = req.params;
   let foundListing = await Listing.findById(id);
-  console.log("found listing", foundListing);
+  // console.log("found listing", foundListing);
   res.render("listings/show.ejs", { listing: foundListing });
 });
 
 // * create route
 app.post("/listings", async (req, res) => {
-  // const newListing = new Listing(req.body);
-  // await newListing.save();
-  // console.log(req.body);
-  // res.redirect("/listings");
+  const { listing } = req.body;
+  // console.log(listing);
+  const newListing = new Listing(listing);
+  await newListing.save();
+  res.redirect("/listings");
 });
 
 // * Express server connection
