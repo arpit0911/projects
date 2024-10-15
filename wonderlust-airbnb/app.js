@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema } = require("./schema.js");
 
 //  * use declaration
 const app = express();
@@ -29,6 +30,15 @@ app.use(express.urlencoded({ extended: true })); // use the urlencoded middlewar
 app.use(methodOverride("_method")); // html form only have post and get methods methodOverride used for put, delete etc methods
 app.engine("ejs", ejsMate); // setup ejsMate templates
 app.use(express.static(path.join(__dirname, "/public"))); //use the static middleware function from express to serve the static files from backend
+
+const validateListing = (req, res, next) => {
+  const { error } = listingSchema.validate(req.body);
+  if (error) {
+    throw new ExpressError(400, error);
+  } else {
+    next();
+  }
+};
 
 // * root Routes
 app.get("/", (req, res) => {
@@ -63,10 +73,8 @@ app.get(
 // * create route
 app.post(
   "/listings",
+  validateListing,
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Send valid Data");
-    }
     const { listing } = req.body;
     // console.log(listing);
     const newListing = new Listing(listing);
@@ -88,10 +96,8 @@ app.get(
 // * Update route
 app.put(
   "/listings/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Send valid Data");
-    }
     const { listing } = req.body;
     const { id } = req.params;
     // console.log(listing);
@@ -117,8 +123,8 @@ app.all("*", (req, res, next) => {
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).send(message);
-  res.send("something went wrong");
+  res.status(statusCode).render("error.ejs", { statusCode, message });
+  // res.status(statusCode).send(message);
 });
 
 // * Express server connection
