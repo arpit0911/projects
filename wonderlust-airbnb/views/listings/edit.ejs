@@ -3,7 +3,12 @@
 <div class="row mt-4">
   <div class="col-8 offset-2">
     <h3 class="mb-3">Edit the listing <%= listing.title %></h3>
-    <form action="/listings/<%= listing._id %>?_method=put" method="post">
+    <form
+      action="/listings/<%= listing._id %>?_method=put"
+      method="post"
+      class="needs-validation"
+      novalidate
+    >
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input
@@ -11,51 +16,61 @@
           value="<%= listing.title %>"
           type="text"
           name="listing[title]"
+          required
         />
+        <div class="invalid-feedback">Field can't be empty</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description</label>
-        <textarea class="form-control" name="listing[description]">
+        <textarea required class="form-control" name="listing[description]">
 <%= listing.description %></textarea
         >
       </div>
       <div mb-3>
         <label class="form-label" for="image">image</label>
         <input
+          required
           class="form-control"
           value="<%= listing.image %>"
           type="text"
           name="listing[image]"
         />
+        <div class="invalid-feedback">Field can't be empty</div>
       </div>
       <div class="row">
         <div class="mb-3 col-md-4">
           <label class="form-label" for="price">Price</label>
           <input
+            required
             class="form-control"
             value="<%= listing.price %>"
             type="number"
             name="listing[price]"
           />
+          <div class="invalid-feedback">Field can't be empty</div>
         </div>
         <div class="mb-3 col-md-8">
           <label class="form-label" for="country">Country</label>
           <input
+            required
             class="form-control"
             value="<%= listing.country %>"
             type="text"
             name="listing[country]"
           />
+          <div class="invalid-feedback">Field can't be empty</div>
         </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location</label>
         <input
+          required
           class="form-control"
           value="<%= listing.location %>"
           type="text"
           name="listing[location]"
         />
+        <div class="invalid-feedback">Field can't be empty</div>
       </div>
       <button class="btn btn-dark add-btn mt-3">Edit</button>
     </form>
