@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate.ejs") %>
 <div class="row mt-4">
   <div class="col-8 offset-3">
-    <h3 class="mb-3">Listing Details</h3>
+    <h3 class="mb-3"><%= listing.title %></h3>
   </div>
   <div class="card col-6 offset-3 show-card">
     <img
@@ -11,22 +11,59 @@
     />
     <div class="card-body">
       <p class="card-text">
-        <b><%= listing.title %></b> <br /><br />
-        <%= listing.description %><br /><br />
+        <!-- <b><%= listing.title %></b> <br /><br /> -->
+        <br />
         <b> &#8377; <%= listing.price.toLocaleString("en-IN") %> </b><br />
+        <%= listing.description %><br /><br />
         <b></b> <%= listing.location %>, <%= listing.country %><br />
         <%= listing.image %> <br />
       </p>
     </div>
   </div>
-</div>
-<div class="btns">
-  <a
-    class="btn btn-dark add-btn col-1 offset-3"
-    href="/listings/<%= listing._id %>/edit"
-    >Edit
-  </a>
-  <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-    <button class="btn btn-dark offset-5">Delete</button>
-  </form>
+  <div class="btns">
+    <a
+      class="btn btn-dark add-btn col-1 offset-3"
+      href="/listings/<%= listing._id %>/edit"
+      >Edit
+    </a>
+    <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+      <button class="btn btn-dark offset-5">Delete</button>
+    </form>
+  </div>
+
+  <div class="col-8 offset-3 my-3">
+    <hr />
+    <h4>Leave a Review</h4>
+    <form
+      class="needs-validation"
+      action="/listings/<%= listing._id %>/reviews"
+      method="post"
+      novalidate
+    >
+      <div class="my-3">
+        <label class="form-label" for="rating">Rating</label>
+        <input
+          class="form-range"
+          type="range"
+          name="review[rating]"
+          min="1"
+          max="5"
+          id="rating"
+          required
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="comment">Comment</label>
+        <textarea
+          class="form-control"
+          name="review[comment]"
+          id="comment"
+          rows="5"
+          cols="30"
+          required
+        ></textarea>
+      </div>
+      <button class="btn btn-outline-dark">Submit</button>
+    </form>
+  </div>
 </div>
