@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./review.js");
 // const DEFAULT_IMAGE_URL =
 //   "https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=2048x2048&w=is&k=20&c=b9S9F5NT9TWeFZE8XGGdIu3FucUa2Nm9MAXIgkj-FnA=";
 const DEFAULT_IMAGE_URL = "https://loremflickr.com/320/240/airbnb";
@@ -25,6 +26,11 @@ const listingSchema = new Schema({
   ],
 });
 
-const Listing = mongoose.model("Listing", listingSchema);
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
+  }
+});
 
+const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;
