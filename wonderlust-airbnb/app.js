@@ -7,6 +7,8 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 //  * use declaration
 const app = express();
@@ -30,9 +32,29 @@ app.use(methodOverride("_method")); // html form only have post and get methods 
 app.engine("ejs", ejsMate); // setup ejsMate templates
 app.use(express.static(path.join(__dirname, "/public"))); //use the static middleware function from express to serve the static files from backend
 
+const sessionOptions = {
+  secret: "myeupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
+
 // * root Routes
 app.get("/", (req, res) => {
   res.send("Iam Home Route");
+});
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
 
 app.use("/listings", listings);
