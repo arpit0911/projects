@@ -36,11 +36,11 @@ app.use(methodOverride("_method")); // html form only have post and get methods 
 app.engine("ejs", ejsMate); // setup ejsMate templates
 app.use(express.static(path.join(__dirname, "/public"))); //use the static middleware function from express to serve the static files from backend
 
-const sessionOptions = {
-  secret: "myeupersecretcode",
-  resave: false,
+const sessionOptions = { //session option use in creating anu session with these details
+  secret: "myeupersecretcode", //secret key for the session
+  resave: false,  
   saveUninitialized: true,
-  cookie: {
+  cookie: { // cookie to identify the session
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -52,15 +52,15 @@ app.get("/", (req, res) => {
   res.send("Iam Home Route");
 });
 
-app.use(session(sessionOptions));
-app.use(flash());
+app.use(session(sessionOptions)); // session options provide is used to create the session with
+app.use(flash()); // flash is used to show ths flash message on success or error of any processes
 
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+app.use(passport.initialize()); //initialize the passport
+app.use(passport.session()); //passport uses the session
+passport.use(new LocalStrategy(User.authenticate())); // provide the authenticate method to user
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(User.serializeUser()); // this helps save the loggedIn user data in the browser
+passport.deserializeUser(User.deserializeUser()); // this helps remove the loggedIn user data from the browser
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
