@@ -5,8 +5,9 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -67,18 +68,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/demouser", async (req, res) => {
-  const fakeUser = {
-    email: "student@gmail.com",
-    username: "delta-student",
-  };
+// app.get("/demouser", async (req, res) => {
+//   const fakeUser = {
+//     email: "student@gmail.com",
+//     username: "delta-student",
+//   };
 
-  let registeredUser = await User.register(fakeUser, "password");
-  res.send(registeredUser);
-});
+//   let registeredUser = await User.register(fakeUser, "password");
+//   res.send(registeredUser);
+// });
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", userRouter);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found!"));
