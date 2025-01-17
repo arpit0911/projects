@@ -36,11 +36,13 @@ app.use(methodOverride("_method")); // html form only have post and get methods 
 app.engine("ejs", ejsMate); // setup ejsMate templates
 app.use(express.static(path.join(__dirname, "/public"))); //use the static middleware function from express to serve the static files from backend
 
-const sessionOptions = { //session option use in creating anu session with these details
+const sessionOptions = {
+  //session option use in creating anu session with these details
   secret: "myeupersecretcode", //secret key for the session
-  resave: false,  
+  resave: false,
   saveUninitialized: true,
-  cookie: { // cookie to identify the session
+  cookie: {
+    // cookie to identify the session
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -63,8 +65,9 @@ passport.serializeUser(User.serializeUser()); // this helps save the loggedIn us
 passport.deserializeUser(User.deserializeUser()); // this helps remove the loggedIn user data from the browser
 
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success"); // req object cant be directly used in the ejs template i.e we use local variables
+  res.locals.error = req.flash("error"); // same as above
+  res.locals.curUser = req.user; // req.user cant be directly use in the ejs template so we define userdetails variable which will be used in the ejs template to menupulate the ui
   next();
 });
 
