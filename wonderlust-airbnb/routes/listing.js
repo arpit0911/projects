@@ -24,14 +24,14 @@ router.get(
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     let foundListing = await Listing.findById(id)
-      .populate("reviews")
+      .populate({ path: "reviews", populate: { path: "author" } })
       .populate("owner");
     // console.log("found listing", foundListing);
     if (!foundListing) {
       req.flash("error", "Listing Not Found!");
       res.redirect("/listings");
     }
-    console.log("found listing", foundListing);
+    // console.log("Populated listing:", JSON.stringify(foundListing, null, 2));
     res.render("listings/show.ejs", { listing: foundListing });
   })
 );

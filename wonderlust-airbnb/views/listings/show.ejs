@@ -34,8 +34,8 @@
     </form>
   </div>
   <% } %>
-
   <div class="col-8 offset-3 my-3">
+    <% if(curUser){ %>
     <hr />
     <h4>Leave a Review</h4>
     <form
@@ -71,23 +71,24 @@
       </div>
       <button class="btn btn-outline-dark">Submit</button>
     </form>
-
+    <% } %>
     <hr />
 
     <h3>All Review</h3>
     <div class="row">
       <% for (const review of listing.reviews) { %>
       <div class="card col-5 ms-3 mb-3 p-2">
-        <h5 class="card-title">John Doe</h5>
+        <h5 class="card-title">@<%= review.author.username%></h5>
         <span class="card-text"><%= review.comment %></span>
         <p class="card-text"><%= review.rating %> stars</p>
-
+        <% if(curUser && curUser._id.equals(review.author._id)){%>
         <form
           action="/listings/<%= listing._id %>/reviews/<%= review._id%>?_method=DELETE"
           method="post"
         >
           <button class="btn btn-dark">Delete</button>
         </form>
+        <% } %>
       </div>
       <%} %>
     </div>

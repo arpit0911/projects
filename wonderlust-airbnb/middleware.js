@@ -1,6 +1,7 @@
 const Listing = require("./models/listing");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
+const Review = require("./models/review.js");
 
 //* middleware to check is the user is logged In or not
 module.exports.isLoggedIn = (req, res, next) => {
@@ -24,6 +25,16 @@ module.exports.isOwner = async (req, res, next) => {
   const foundListing = await Listing.findById(id);
   if (!foundListing.owner.equals(res.locals.curUser._id)) {
     req.flash("error", "You are not authorized to Edit");
+    return res.redirect(`/listings/${id}`);
+  }
+  next();
+};
+
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+  const foundReview = await Review.findById(reviewId);
+  if (!foundReview.author.equals(res.locals.curUser._id)) {
+    req.flash("error", "You are not authorized to Delete");
     return res.redirect(`/listings/${id}`);
   }
   next();
