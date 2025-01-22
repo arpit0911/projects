@@ -12,20 +12,12 @@ router
   .route("/")
   .get(wrapAsync(listingController.index)) // * index route
   // * create route
-  // .post(
-  //   isLoggedIn,
-  //   validateListing,
-  //   wrapAsync(listingController.createListing)
-  // );
-
-  .post(upload.single("listing[image]"), (req, res) => {
-    // console.log(req.file);
-    try {
-      res.send(req.file);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  .post(
+    isLoggedIn,
+    upload.single("listing[image]"),
+    validateListing,
+    wrapAsync(listingController.createListing)
+  );
 
 // * New route
 router.get("/new", isLoggedIn, listingController.renderNewForm);

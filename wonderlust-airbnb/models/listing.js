@@ -10,10 +10,14 @@ const listingSchema = new Schema({
     required: true,
   },
   description: String,
+  // image: {
+  //   type: String,
+  //   default: DEFAULT_IMAGE_URL,
+  //   set: (v) => (v === "" ? DEFAULT_IMAGE_URL : v),
+  // },
   image: {
-    type: String,
-    default: DEFAULT_IMAGE_URL,
-    set: (v) => (v === "" ? DEFAULT_IMAGE_URL : v),
+    url: String,
+    filename: String,
   },
   price: Number,
   location: String,
