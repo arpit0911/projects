@@ -1,4 +1,8 @@
 // * imports/requires
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+  console.log("env", process.env.NODE_ENV);
+}
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
