@@ -8,6 +8,7 @@
       method="post"
       class="needs-validation"
       novalidate
+      enctype="multipart/form-data"
     >
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -26,16 +27,13 @@
 <%= listing.description %></textarea
         >
       </div>
-      <div mb-3>
-        <label class="form-label" for="image">image</label>
-        <input
-          required
-          class="form-control"
-          value="<%= listing.image %>"
-          type="text"
-          name="listing[image]"
-        />
-        <div class="invalid-feedback">Field can't be empty</div>
+      <div class="mb-3 col-md-4">
+        <label class="form-label" for="image_preview">Original Image</label>
+        <img src="<%=liteImageUrl%>" alt="listing_image" />
+      </div>
+      <div class="mb-3 col-md-4">
+        <label class="form-label" for="image">Upload New Image</label>
+        <input class="form-control" type="file" name="listing[image]" />
       </div>
       <div class="row">
         <div class="mb-3 col-md-4">

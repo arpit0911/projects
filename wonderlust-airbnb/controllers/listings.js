@@ -27,7 +27,7 @@ module.exports.createListing = async (req, res) => {
   const { listing } = req.body;
   let url = req.file.path;
   let filename = req.file.filename;
-  console.log(url, "...", filename);
+  // console.log(url, "...", filename);
   const newListing = new Listing(listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
@@ -43,14 +43,23 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Listing Not Found");
     res.redirect("/listings");
   }
-  res.render("listings/edit.ejs", { listing: foundListing });
+  let liteImageUrl = foundListing.image.url;
+  liteImageUrl = liteImageUrl.replace("upload", "upload/w_300");
+  res.render("listings/edit.ejs", { listing: foundListing, liteImageUrl });
 };
 
 module.exports.updateListing = async (req, res) => {
   const { listing } = req.body;
   const { id } = req.params;
   // console.log(listing);
-  await Listing.findByIdAndUpdate(id, listing);
+  let updatedListing = await Listing.findByIdAndUpdate(id, listing);
+  if (typeof req.file !== "undefined") {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    updatedListing.image = { url, filename };
+    await updatedListing.save();
+  }
+
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);
 };

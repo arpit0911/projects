@@ -19,7 +19,6 @@
       </p>
       <p class="card-text"><%= listing.description %></p>
       <p class="card-text"><%= listing.location %>, <%= listing.country %></p>
-      <p class="card-text"><%= listing.image %></p>
     </div>
   </div>
   <% if(curUser && curUser._id.equals(listing.owner._id)) { %>
