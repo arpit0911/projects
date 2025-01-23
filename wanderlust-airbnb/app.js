@@ -54,9 +54,9 @@ const sessionOptions = {
 };
 
 // * root Routes
-app.get("/", (req, res) => {
-  res.send("Iam Home Route");
-});
+// app.get("/", (req, res) => {
+//   res.send("Iam Home Route");
+// });
 
 app.use(session(sessionOptions)); // session options provide is used to create the session with
 app.use(flash()); // flash is used to show ths flash message on success or error of any processes
