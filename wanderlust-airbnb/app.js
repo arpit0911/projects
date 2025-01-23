@@ -13,6 +13,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -21,8 +22,9 @@ const User = require("./models/user.js");
 //  * use declaration
 const app = express();
 const port = 8080;
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
-
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
+console.log("dbUrl", dbUrl);
 // * database connections
 
 main()
@@ -30,7 +32,7 @@ main()
   .catch((err) => console.error("Error connecting Database", err));
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 
 app.set("view engine", "ejs"); // to specify the view engine
@@ -40,8 +42,21 @@ app.use(methodOverride("_method")); // html form only have post and get methods 
 app.engine("ejs", ejsMate); // setup ejsMate templates
 app.use(express.static(path.join(__dirname, "/public"))); //use the static middleware function from express to serve the static files from backend
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: "myeupersecretcode",
+  },
+  touchAfter: 24 * 60 * 60, // time period in seconds
+});
+
+store.on("error", function (e) {
+  console.log("Session Store Error", e);
+});
+
 const sessionOptions = {
   //session option use in creating anu session with these details
+  store: store, // store the session in the mongoDB
   secret: "myeupersecretcode", //secret key for the session
   resave: false,
   saveUninitialized: true,
